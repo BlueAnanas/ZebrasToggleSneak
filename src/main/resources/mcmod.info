@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "zebrastogglesneak",
+    "name": "Zebra's Toggle Sneak&Sprint",
+    "description": "Sneak and sprint keys behave as if they can be locked into the pressed state and unlocked by pressing them again. The function can be enabled/disabled ingame by pressing other configurable keys. Have a look into the Controls section.",
+    "version": "${mod_version}",
+    "mcversion": "${minecraft_version}",
+    "url": "https://github.com/BlueAnanas/ZebrasToggleSneak",
+    "updateUrl": "",
+    "authorList": [ "BlauesZebra" ],
+    "credits": "Authored by BlauesZebra based on the functions of Davidee's Mod.",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": ["Forge@[${forge_version},)"],
+    "dependencies": ["Forge@[${forge_version},)"],
+    "dependants": [],
+    "useDependencyInformation": "true"
+  }]
+}

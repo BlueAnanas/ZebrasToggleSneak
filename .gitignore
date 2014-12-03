@@ -1,3 +1,17 @@
+# subdirs
+/.settings/
+/.metadata/
+/.gradle/
+/bin/
+/release/
+/build/
+/run/
+
+# some IDE things
+.project
+.classpath
+
+# all compiled code
 *.class
 
 # Mobile Tools for Java (J2ME)
