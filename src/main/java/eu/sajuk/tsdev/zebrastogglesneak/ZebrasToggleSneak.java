@@ -1,5 +1,6 @@
 package eu.sajuk.tsdev.zebrastogglesneak;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -13,28 +14,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
-@Mod(modid="@MOD_ID@", name="@MOD_NAME@", version="@MOD_VERSION@")
+@Mod(modid="@MOD_ID@", name="@MOD_NAME@", version="@MOD_VERSION@", guiFactory = "eu.sajuk.tsdev.zebrastogglesneak.ZebasToggleSneakGuiFactory")
 public class ZebrasToggleSneak {
 
-	private static Property PropToggleSneak, PropToggleSprint;
+	public static Configuration config;
 	public static boolean toggleSneak = true;
 	public static boolean toggleSprint = false;
 	public static boolean saveChanges = false;
 	private KeyBinding sneakBinding;
 	private KeyBinding sprintBinding;
-	private Configuration config;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 
-		this.config = new Configuration(event.getSuggestedConfigurationFile());
-		this.config.load();
-		toggleSneak = (PropToggleSneak = this.config.get("default", "toggleSneak", toggleSneak, "Sneak toggle enabled on startup?")).getBoolean(toggleSneak);
-		toggleSprint = (PropToggleSprint = this.config.get("default", "toggleSprint", toggleSprint, "Sprint toggle enabled on startup?")).getBoolean(toggleSprint);
-		saveChanges = this.config.get("default", "saveChanges", saveChanges, "Automatically remember last state?").getBoolean(saveChanges);
-		this.config.save();
+		config = new Configuration(event.getSuggestedConfigurationFile());
+		syncConfig();
 	}
 
 	@EventHandler
@@ -63,14 +58,25 @@ public class ZebrasToggleSneak {
 		
 		if ((Minecraft.getMinecraft().currentScreen instanceof GuiChat)) return;
 		
-		if (this.sneakBinding.getIsKeyPressed()) {
-			toggleSneak = !toggleSneak;
-			if (saveChanges) PropToggleSneak.set(toggleSneak);
-		}
-		if (this.sprintBinding.getIsKeyPressed()) {
-			toggleSprint = !toggleSprint;
-			if (saveChanges) PropToggleSprint.set(toggleSprint);
-		}
+		if (this.sneakBinding.getIsKeyPressed()) toggleSneak = !toggleSneak;
+		if (this.sprintBinding.getIsKeyPressed()) toggleSprint = !toggleSprint;
+	}
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+
+    	if (eventArgs.modID.equals("@MOD_ID@")) syncConfig();
+    }
+    
+    public void syncConfig() {
+
+    	config.load();
+    	config.setCategoryComment(Configuration.CATEGORY_GENERAL, "ATTENTION: Editing this file manually is no longer necessary. \n" +
+                "Use the Mods button on Minecraft's home screen to modify these settings.");
+		toggleSprint = config.getBoolean("Sneak function enabled", Configuration.CATEGORY_GENERAL, toggleSneak, "Will the sneak toggle function be enabled on startup?");
+		toggleSprint = config.getBoolean("Sprint function enabled", Configuration.CATEGORY_GENERAL, toggleSprint, "Will the sprint toggle function be enabled on startup?");
+
+        if(config.hasChanged()) config.save();
 	}
 
 }
