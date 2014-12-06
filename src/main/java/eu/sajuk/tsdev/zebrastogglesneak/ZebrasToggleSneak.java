@@ -29,6 +29,9 @@ public class ZebrasToggleSneak {
 	public void preInit(FMLPreInitializationEvent event) {
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
+    	config.load();
+    	config.setCategoryComment(Configuration.CATEGORY_GENERAL, "ATTENTION: Editing this file manually is no longer necessary. \n" +
+                "Use the Mods button on Minecraft's home screen to modify these settings.");
 		syncConfig();
 	}
 
@@ -70,13 +73,10 @@ public class ZebrasToggleSneak {
     
     public void syncConfig() {
 
-    	config.load();
-    	config.setCategoryComment(Configuration.CATEGORY_GENERAL, "ATTENTION: Editing this file manually is no longer necessary. \n" +
-                "Use the Mods button on Minecraft's home screen to modify these settings.");
 		toggleSprint = config.getBoolean("Sneak function enabled", Configuration.CATEGORY_GENERAL, toggleSneak, "Will the sneak toggle function be enabled on startup?");
 		toggleSprint = config.getBoolean("Sprint function enabled", Configuration.CATEGORY_GENERAL, toggleSprint, "Will the sprint toggle function be enabled on startup?");
 
-        if(config.hasChanged()) config.save();
+        config.save();
 	}
 
 }

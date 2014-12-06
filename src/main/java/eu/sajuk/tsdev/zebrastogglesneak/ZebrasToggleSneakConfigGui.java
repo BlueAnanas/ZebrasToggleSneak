@@ -9,8 +9,8 @@ public class ZebrasToggleSneakConfigGui extends GuiConfig {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ZebrasToggleSneakConfigGui(GuiScreen parent) {
-        super(parent,
-                (new ConfigElement(ZebrasToggleSneak.config.getCategory(Configuration.CATEGORY_GENERAL))).getChildElements(),
-                "@MOD_ID@", false, false, GuiConfig.getAbridgedConfigPath(ZebrasToggleSneak.config.toString()));
+		super(parent,
+				(new ConfigElement(ZebrasToggleSneak.config.getCategory(Configuration.CATEGORY_GENERAL))).getChildElements(),
+				"@MOD_ID@", false, false, "@MOD_NAME@", GuiConfig.getAbridgedConfigPath(ZebrasToggleSneak.config.toString()));
     }
 }
