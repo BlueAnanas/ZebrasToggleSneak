@@ -1,7 +1,7 @@
 package eu.sajuk.tsdev.zebrastogglesneak;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MovementInput;
@@ -47,7 +47,7 @@ public class MovementInputModded extends MovementInput {
 			// sprint conditions same as in net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate()
 			// therefore sprinting is only possible if on ground, not too hungry etc
 			if (this.gameSettings.keyBindSprint.getIsKeyPressed() && !this.sprintWasPressed) this.sprint = !this.sprint;
-			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			if (this.sprint &&  this.moveForward == 1.0F && player.onGround && !player.isUsingItem()
 					&& !player.isPotionActive(Potion.blindness)) player.setSprinting(true);
 		} else this.sprint = false;

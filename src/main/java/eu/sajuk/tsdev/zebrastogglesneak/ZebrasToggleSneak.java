@@ -1,15 +1,15 @@
 package eu.sajuk.tsdev.zebrastogglesneak;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
@@ -29,6 +29,9 @@ public class ZebrasToggleSneak {
 	public void preInit(FMLPreInitializationEvent event) {
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
+    	config.load();
+    	config.setCategoryComment(Configuration.CATEGORY_GENERAL, "ATTENTION: Editing this file manually is no longer necessary. \n" +
+                "Use the Mods button on Minecraft's home screen to modify these settings.");
 		syncConfig();
 	}
 
@@ -70,13 +73,10 @@ public class ZebrasToggleSneak {
     
     public void syncConfig() {
 
-    	config.load();
-    	config.setCategoryComment(Configuration.CATEGORY_GENERAL, "ATTENTION: Editing this file manually is no longer necessary. \n" +
-                "Use the Mods button on Minecraft's home screen to modify these settings.");
 		toggleSprint = config.getBoolean("Sneak function enabled", Configuration.CATEGORY_GENERAL, toggleSneak, "Will the sneak toggle function be enabled on startup?");
 		toggleSprint = config.getBoolean("Sprint function enabled", Configuration.CATEGORY_GENERAL, toggleSprint, "Will the sprint toggle function be enabled on startup?");
 
-        if(config.hasChanged()) config.save();
+        config.save();
 	}
 
 }

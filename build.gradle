@@ -34,7 +34,7 @@ version = config.mod_version
 archivesBaseName = "[${config.minecraft_version}]${config.mod_id}"
 
 minecraft {
-    version = config.minecraft_version + "-" + config.forge_version // grab latest forge
+    version = config.minecraft_version + "-" + config.forge_version + "-" + config.minecraft_version // grab latest forge
 	if (file('../multiProjectDir').exists()) {
 		assetDir = "../multiProjectDir/assets"
 	} else {
