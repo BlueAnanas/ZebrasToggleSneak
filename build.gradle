@@ -55,6 +55,7 @@ dependencies {
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+    compile files('../multiProjectDir/lib/liteloader-1.8-b45/archive/build/dist/liteloader-1.8-SNAPSHOT-mcpnames.jar')
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -67,10 +68,12 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.info'
         include '**/*.properties'
+        include '**/*.json'
 
         // replaces
         expand ([
             'mod_version': config.mod_version,
+            'mod_revision': config.mod_build,
             'forge_version': config.forge_version,
             'minecraft_version': config.minecraft_version,
             'mod_id': config.mod_id,
@@ -82,13 +85,17 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
         exclude '**/*.properties'
+        exclude '**/*.json'
     }
 }
 
 // change the name of my obfuscated jar
 jar {
-    appendix = 'universal'
     from('src/main/java') { include 'assets/**' }
+//	appendix = 'universal'
+//	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
+	extension = 'litemod'
+	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
 }
 
 // add a source jar
@@ -107,3 +114,10 @@ artifacts {
     archives sourceJar
     archives deobfJar
 }
+
+// apply plugin: 'liteloader'  /// this simply doesn't work
+//jarLiteloader{
+//    from('src/main/java') { include 'assets/**' }
+//	appendix = minecraft.version
+//	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
+//}

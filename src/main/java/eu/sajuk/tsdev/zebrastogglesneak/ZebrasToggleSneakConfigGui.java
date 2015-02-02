@@ -9,7 +9,7 @@ public class ZebrasToggleSneakConfigGui extends GuiConfig {
 
 	public ZebrasToggleSneakConfigGui(GuiScreen parent) {
 		super(parent,
-				(new ConfigElement(ZebrasToggleSneak.config.getCategory(Configuration.CATEGORY_GENERAL))).getChildElements(),
-				"@MOD_ID@", false, false, "@MOD_NAME@", GuiConfig.getAbridgedConfigPath(ZebrasToggleSneak.config.toString()));
+				(new ConfigElement(FMLZebrasToggleSneak.config.getCategory(Configuration.CATEGORY_GENERAL))).getChildElements(),
+				"@MOD_ID@", false, false, "@MOD_NAME@", GuiConfig.getAbridgedConfigPath(FMLZebrasToggleSneak.config.toString()));
     }
 }

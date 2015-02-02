@@ -1,0 +1,8 @@
+{
+    "mcversion":"${minecraft_version}",
+    "name":		"zebrastogglesneak",
+    "revision":	"${mod_revision}",
+	"version":  "${mod_version}",
+    "author":	"BlauesZebra",
+    "description":	"Sneak and sprint keys behave as if they can be locked into the pressed state and unlocked by pressing them again. The function can be enabled/disabled ingame by pressing other configurable keys. Have a look into the Controls section."
+}
