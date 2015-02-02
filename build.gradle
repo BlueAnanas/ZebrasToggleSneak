@@ -31,7 +31,7 @@ configFile.withReader {
 
 group = config.group_name
 version = config.mod_version
-archivesBaseName = "[${config.minecraft_version}]${config.mod_id}"
+archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version // grab latest forge
@@ -63,14 +63,22 @@ dependencies {
 }
 
 processResources {
+    // force replacements if input changes
+    inputs.property "version", config.mod_version
+    inputs.property "mcversion", config.minecraft_version
+	inputs.property "revision", config.mod_build
+    inputs.property "forgeversion", config.forge_version
+    
     // replace stuff in the files we want.
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.info'
         include '**/*.properties'
+        include '**/*.json'
 
         // replaces
         expand ([
             'mod_version': config.mod_version,
+            'mod_revision': config.mod_build,
             'forge_version': config.forge_version,
             'minecraft_version': config.minecraft_version,
             'mod_id': config.mod_id,
@@ -82,13 +90,15 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
         exclude '**/*.properties'
+        exclude '**/*.json'
     }
 }
 
 // change the name of my obfuscated jar
 jar {
-    appendix = 'universal'
+//    appendix = 'forge'
     from('src/main/java') { include 'assets/**' }
+	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
 }
 
 // add a source jar
@@ -106,4 +116,11 @@ task deobfJar(type: Jar) {
 artifacts {
     archives sourceJar
     archives deobfJar
+}
+
+apply plugin: 'liteloader'  /// should work
+jarLiteloader{
+    from('src/main/java') { include 'assets/**' }
+//	appendix = 'liteloader'
+	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
 }
