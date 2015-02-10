@@ -29,8 +29,10 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
+ext.set("revision", getBuildNo())
+
 group = config.group_name
-version = config.mod_version
+version = config.mod_version + "." + revision
 archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 
 minecraft {
@@ -66,7 +68,7 @@ processResources {
     // force replacements if input changes
     inputs.property "version", config.mod_version
     inputs.property "mcversion", config.minecraft_version
-	inputs.property "revision", config.mod_build
+	inputs.property "revision", project.revision
     inputs.property "forgeversion", config.forge_version
     
     // replace stuff in the files we want.
@@ -86,7 +88,7 @@ processResources {
         ])
     }
 
-    // copy everything else that we didnt do before
+    // copy everything else that we didn't do before
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
         exclude '**/*.properties'
@@ -94,9 +96,7 @@ processResources {
     }
 }
 
-// change the name of my obfuscated jar
 jar {
-//    appendix = 'forge'
     from('src/main/java') { include 'assets/**' }
 	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
 }
@@ -116,6 +116,17 @@ task deobfJar(type: Jar) {
 artifacts {
     archives sourceJar
     archives deobfJar
+}
+String getBuildNo(){
+	return git("rev-list", "HEAD", "--count")
+}
+import static net.minecraftforge.gradle.dev.DevBasePlugin.*
+String git(String[] args){
+	try{
+		return runGit(project, project.getProjectDir(), args)
+	}catch(Exception e){
+		return null
+	}
 }
 
 apply plugin: 'liteloader'  /// should work

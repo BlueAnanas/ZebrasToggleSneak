@@ -1,11 +1,11 @@
 package eu.sajuk.tsdev.zebrastogglesneak;
 
 import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,11 +15,10 @@ import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import com.mumfrey.liteloader.modconfig.ConfigStrategy;
-import com.mumfrey.liteloader.modconfig.Exposable;
 import com.mumfrey.liteloader.modconfig.ExposableOptions;
 
 @ExposableOptions(strategy = ConfigStrategy.Unversioned, filename = "@MOD_ID@.json")
-public class LiteModZebrasToggleSneak implements LiteMod, Tickable, Exposable, Configurable {
+public class LiteModZebrasToggleSneak implements LiteMod, Tickable, Configurable {
 
 	@Expose
 	@SerializedName("toggle_sneak")
@@ -27,6 +26,16 @@ public class LiteModZebrasToggleSneak implements LiteMod, Tickable, Exposable, C
 	@Expose
 	@SerializedName("toggle_sprint")
 	public boolean toggleSprint = false;
+	@Expose
+	@SerializedName("display_status")
+	public boolean displayStatus = true;
+	
+	private ZebrasToggleSneak ZTS = new ZebrasToggleSneak();
+	private class KeyAndAction {
+		public KeyBinding kb; public boolean pressed = false;
+		public KeyAndAction(KeyBinding kb) { this.kb = kb; }
+	}
+	private List<KeyAndAction> kaaList = new ArrayList<KeyAndAction>();		
 
 	public String getName() {
         return "@MOD_NAME@";
@@ -38,37 +47,44 @@ public class LiteModZebrasToggleSneak implements LiteMod, Tickable, Exposable, C
 
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock) {
-    	ZebrasToggleSneak.clientTick(minecraft);
+    	
+    	ZTS.clientTick();
+    	if (inGame && minecraft.currentScreen == null) {
+    		if (Minecraft.isGuiEnabled()) ZTS.renderGameOverlay();
+    		for(KeyAndAction kaa: kaaList) {
+    			if (kaa.kb.getIsKeyPressed()) {
+    				if (!kaa.pressed) {
+    				kaa.pressed=true;
+    				ZTS.onKeyInput(kaa.kb);
+    				}
+    			} else {
+    				kaa.pressed=false;    				
+    			}
+    		}
+    	}
     }
 
     public void init(File configPath) {
-    	ZebrasToggleSneak.liteLoaded = true;
-        String relativeConfig = "@MOD_ID@";
-        File liteConfigDir = new File(LiteLoader.getCommonConfigFolder(), relativeConfig);
-        File mcConfigDir = new File(new File(LiteLoader.getGameDirectory(), "config"), relativeConfig);
-
-        // If forge old exist and liteloader configs don't, copy over.
-        if (!liteConfigDir.exists() && mcConfigDir.exists()) {
-            try {
-                FileUtils.copyDirectory(mcConfigDir, liteConfigDir);
-            } catch (IOException e) {
-                // Old configs found, but unable to convert.
-            }
-        }
+    	
+    	ZTS.liteLoaded = true;
         // check if forge is installed.
         try {
             Class.forName("net.minecraftforge.common.MinecraftForge");
-            ZebrasToggleSneak.forgePresent = true;
+            ZTS.forgePresent = true;
         } catch (ClassNotFoundException e) {
-        	ZebrasToggleSneak.forgePresent = false;
+        	ZTS.forgePresent = false;
         }
-        
-        ZebrasToggleSneak.registerKeyBinding();
+        ZTS.toggleSneak = toggleSneak;
+        ZTS.toggleSprint = toggleSprint;
+        ZTS.displayStatus = displayStatus;
+        for(KeyBinding kb: ZTS.getKeyBindings()) {
+        	kaaList.add(new KeyAndAction(kb));
+        	LiteLoader.getInput().registerKeyBinding(kb);
+        }
+
     }
 
-	public void upgradeSettings(String version, File configPath, File oldConfigPath) {
-		// TODO Auto-generated method stub
-	}
+	public void upgradeSettings(String version, File configPath, File oldConfigPath) {}
 
 	@Override
 	public Class<? extends ConfigPanel> getConfigPanelClass() {
