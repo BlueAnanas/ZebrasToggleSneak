@@ -1,3 +1,12 @@
 key.toggle.sneak=Sneak function enable/disable
 key.toggle.sprint=Sprint function enable/disable
 key.categories.toggle=Zebra's Toggle Sneak&Sprint
+config.panel.title=Zebra's Toggle Sneak&Sprint Settings
+config.panel.sneak=Sneak function enabled
+config.panel.h.sneak=Will the sneak toggle function be enabled on startup?
+config.panel.sprint=Sprint function enabled
+config.panel.h.sprint=Will the sprint toggle function be enabled on startup?
+config.panel.display=Display toggle status
+config.panel.h.display=Will current status of the toggle function be displayed?
+display.label.sneak=sneak
+display.label.sprint=sprint

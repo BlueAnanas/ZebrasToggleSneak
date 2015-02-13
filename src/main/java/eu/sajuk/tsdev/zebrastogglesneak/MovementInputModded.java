@@ -8,49 +8,51 @@ import net.minecraft.util.MovementInput;
 
 public class MovementInputModded extends MovementInput {
 
-	private boolean sprint;
+	public boolean sprint;
 	private GameSettings gameSettings;
+	private ZebrasToggleSneak ZTS;
 	private boolean sneakWasPressed;
 	private boolean sprintWasPressed;
 
-	public MovementInputModded(GameSettings gameSettings) {
+	public MovementInputModded(GameSettings gameSettings, ZebrasToggleSneak ZTS) {
 		this.sprint = false;
-		this.gameSettings = gameSettings; 
+		this.gameSettings = gameSettings;
+		this.ZTS = ZTS;
 		this.sneakWasPressed = false;
 		this.sprintWasPressed = false;
 	}
 
 	public void updatePlayerMoveState() {
 		
-		this.moveStrafe = 0.0F;
-		this.moveForward = 0.0F;
+		moveStrafe = 0.0F;
+		moveForward = 0.0F;
 
-		if (this.gameSettings.keyBindForward.getIsKeyPressed()) this.moveForward++;
-		if (this.gameSettings.keyBindBack.getIsKeyPressed()) this.moveForward--;
-		if (this.gameSettings.keyBindLeft.getIsKeyPressed()) this.moveStrafe++;
-		if (this.gameSettings.keyBindRight.getIsKeyPressed()) this.moveStrafe--;
+		if (gameSettings.keyBindForward.getIsKeyPressed()) moveForward++;
+		if (gameSettings.keyBindBack.getIsKeyPressed()) moveForward--;
+		if (gameSettings.keyBindLeft.getIsKeyPressed()) moveStrafe++;
+		if (gameSettings.keyBindRight.getIsKeyPressed()) moveStrafe--;
 
-		this.jump = this.gameSettings.keyBindJump.getIsKeyPressed();
+		jump = gameSettings.keyBindJump.getIsKeyPressed();
 		
-		if (ZebrasToggleSneak.toggleSneak) {
-			if (this.gameSettings.keyBindSneak.getIsKeyPressed() && !this.sneakWasPressed) this.sneak = !this.sneak;
+		if (ZTS.toggleSneak) {
+			if (gameSettings.keyBindSneak.getIsKeyPressed() && !sneakWasPressed) sneak = !sneak;
 		} else {
-			this.sneak = this.gameSettings.keyBindSneak.getIsKeyPressed();
+			sneak = gameSettings.keyBindSneak.getIsKeyPressed();
 		}
-		if (this.sneak) {
-			this.moveStrafe *= 0.3F;
-			this.moveForward *= 0.3F;
+		if (sneak) {
+			moveStrafe *= 0.3F;
+			moveForward *= 0.3F;
 		}
-		this.sneakWasPressed = this.gameSettings.keyBindSneak.getIsKeyPressed();
+		sneakWasPressed = gameSettings.keyBindSneak.getIsKeyPressed();
 		
-		if (ZebrasToggleSneak.toggleSprint) {
+		if (ZTS.toggleSprint) {
 			// sprint conditions same as in net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate()
 			// therefore sprinting is only possible if on ground, not too hungry etc
-			if (this.gameSettings.keyBindSprint.getIsKeyPressed() && !this.sprintWasPressed) this.sprint = !this.sprint;
+			if (gameSettings.keyBindSprint.getIsKeyPressed() && !sprintWasPressed) sprint = !sprint;
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-			if (this.sprint &&  this.moveForward == 1.0F && player.onGround && !player.isUsingItem()
+			if (sprint &&  moveForward == 1.0F && player.onGround && !player.isUsingItem()
 					&& !player.isPotionActive(Potion.blindness)) player.setSprinting(true);
-		} else this.sprint = false;
-		this.sprintWasPressed = this.gameSettings.keyBindSprint.getIsKeyPressed();
+		} else sprint = false;
+		sprintWasPressed = gameSettings.keyBindSprint.getIsKeyPressed();
 	}
 }

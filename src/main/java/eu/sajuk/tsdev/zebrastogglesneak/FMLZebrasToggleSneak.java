@@ -1,12 +1,20 @@
 package eu.sajuk.tsdev.zebrastogglesneak;
 
-import net.minecraft.client.Minecraft;
+import java.util.List;
+
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -16,6 +24,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class FMLZebrasToggleSneak {
 
 	public static Configuration config;
+	private ZebrasToggleSneak ZTS = new ZebrasToggleSneak();
+	private List<KeyBinding> kbList;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -30,25 +40,39 @@ public class FMLZebrasToggleSneak {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
         if (willBeLiteLoaded()) {
-            ZebrasToggleSneak.liteLoaded = true; 
+            ZTS.liteLoaded = true; 
             return;
         }
-
-        ZebrasToggleSneak.registerKeyBinding();
+        kbList = ZTS.getKeyBindings();
+        for(KeyBinding kb: kbList) ClientRegistry.registerKeyBinding(kb);
 
 		FMLCommonHandler.instance().bus().register(this);
 	}
 
+	@EventHandler
+	public void postLoad(FMLPostInitializationEvent event) {
+
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
 	@SubscribeEvent
-	public void clientTick(ClientTickEvent event)
-	{
-		ZebrasToggleSneak.clientTick(Minecraft.getMinecraft());
+	public void clientTick(ClientTickEvent event) {
+		
+		ZTS.clientTick();
 	}
 
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
 
-		ZebrasToggleSneak.onKeyInput();
+		for(KeyBinding kb: kbList) {
+			if (kb.getIsKeyPressed()) ZTS.onKeyInput(kb);
+		}
+	}
+
+	@SubscribeEvent
+	public void afterDraw (RenderGameOverlayEvent.Post event) {
+
+		if (event.type == ElementType.ALL) ZTS.renderGameOverlay();
 	}
 
 	@SubscribeEvent
@@ -59,8 +83,9 @@ public class FMLZebrasToggleSneak {
 
 	public void syncConfig() {
 
-		ZebrasToggleSneak.toggleSprint = config.getBoolean("Sneak function enabled", Configuration.CATEGORY_GENERAL, ZebrasToggleSneak.toggleSneak, "Will the sneak toggle function be enabled on startup?");
-		ZebrasToggleSneak.toggleSprint = config.getBoolean("Sprint function enabled", Configuration.CATEGORY_GENERAL, ZebrasToggleSneak.toggleSprint, "Will the sprint toggle function be enabled on startup?");
+		ZTS.toggleSneak = config.getBoolean(I18n.format("config.panel.sneak"), Configuration.CATEGORY_GENERAL, ZTS.toggleSneak, I18n.format("config.panel.h.sneak"));
+		ZTS.toggleSprint = config.getBoolean(I18n.format("config.panel.sprint"), Configuration.CATEGORY_GENERAL, ZTS.toggleSprint, I18n.format("config.panel.h.sprint"));
+		ZTS.displayStatus = config.getBoolean(I18n.format("config.panel.display"), Configuration.CATEGORY_GENERAL, ZTS.displayStatus, I18n.format("config.panel.h.display"));
 
 		config.save();
 	}

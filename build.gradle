@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+    	mavenLocal()  // added to find the pached ForgeGradle jar - don't forget to do install after building it locally
         mavenCentral()
         maven {
             name = "forge"
@@ -29,9 +30,11 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
+ext.set("revision", getBuildNo())
+
 group = config.group_name
-version = config.mod_version
-archivesBaseName = "[${config.minecraft_version}]${config.mod_id}"
+version = config.mod_version + "." + revision
+archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version + "-" + config.minecraft_version // grab latest forge
@@ -46,6 +49,9 @@ minecraft {
     replace '@MINECRAFT_VERSION@', config.minecraft_version
 }
 
+repositories {
+    mavenLocal()  // install the com.mumfrey:liteloader:1.8-SNAPSHOT-mcpnames jar manually in local repo
+}                 // mvn install:install-file -Dfile={local jar file} -DgroupId=com.mumfrey -DartifactId=liteloader -Dversion=1.8-SNAPSHOT-mcpnames -Dpackaging=jar
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -55,7 +61,6 @@ dependencies {
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-    compile files('../multiProjectDir/lib/liteloader-1.8-b45/archive/build/dist/liteloader-1.8-SNAPSHOT-mcpnames.jar')
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -64,6 +69,12 @@ dependencies {
 }
 
 processResources {
+    // force replacements if input changes
+    inputs.property "version", config.mod_version
+    inputs.property "mcversion", config.minecraft_version
+	inputs.property "revision", project.revision
+    inputs.property "forgeversion", config.forge_version
+    
     // replace stuff in the files we want.
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.info'
@@ -81,7 +92,7 @@ processResources {
         ])
     }
 
-    // copy everything else that we didnt do before
+    // copy everything else that we didn't do before
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
         exclude '**/*.properties'
@@ -89,13 +100,9 @@ processResources {
     }
 }
 
-// change the name of my obfuscated jar
 jar {
     from('src/main/java') { include 'assets/**' }
-//	appendix = 'universal'
-//	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
-	extension = 'litemod'
-	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
+	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
 }
 
 // add a source jar
@@ -114,10 +121,21 @@ artifacts {
     archives sourceJar
     archives deobfJar
 }
+String getBuildNo(){
+	return git("rev-list", "HEAD", "--count")
+}
+import static net.minecraftforge.gradle.dev.DevBasePlugin.*
+String git(String[] args){
+	try{
+		return runGit(project, project.getProjectDir(), args)
+	}catch(Exception e){
+		return null
+	}
+}
 
-// apply plugin: 'liteloader'  /// this simply doesn't work
-//jarLiteloader{
-//    from('src/main/java') { include 'assets/**' }
-//	appendix = minecraft.version
-//	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
-//}
+apply plugin: 'liteloader'  /// should work
+jarLiteloader{
+    from('src/main/java') { include 'assets/**' }
+//	appendix = 'liteloader'
+	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
+}
