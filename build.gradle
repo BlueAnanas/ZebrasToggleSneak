@@ -84,7 +84,7 @@ processResources {
         // replaces
         expand ([
             'mod_version': config.mod_version,
-            'mod_revision': config.mod_build,
+            'mod_revision': project.revision,
             'forge_version': config.forge_version,
             'minecraft_version': config.minecraft_version,
             'mod_id': config.mod_id,

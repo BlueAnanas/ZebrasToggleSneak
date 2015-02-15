@@ -30,7 +30,7 @@ public class LiteModZebrasToggleSneak implements LiteMod, Tickable, Configurable
 	@SerializedName("display_status")
 	public boolean displayStatus = true;
 	
-	private ZebrasToggleSneak ZTS = new ZebrasToggleSneak();
+	public ZebrasToggleSneak ZTS = new ZebrasToggleSneak();
 	private class KeyAndAction {
 		public KeyBinding kb; public boolean pressed = false;
 		public KeyAndAction(KeyBinding kb) { this.kb = kb; }
