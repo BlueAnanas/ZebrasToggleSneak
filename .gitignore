@@ -2,6 +2,7 @@
 /.settings/
 /.metadata/
 /.gradle/
+/eclipse/
 /bin/
 /release/
 /build/
