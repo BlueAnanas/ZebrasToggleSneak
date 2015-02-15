@@ -62,7 +62,7 @@ public class ZebrasToggleSneakConfigPanelLl extends Gui implements ConfigPanel {
 	    sprintFunctionEnabled.checked = mod.toggleSprint;
 	    buttons.add(statusDisplayEnabled =
 		        new GuiCheckbox(id++, 10, SPACING * line++, I18n.format("config.panel.display")));
-	    statusDisplayEnabled.checked = mod.toggleSprint;
+	    statusDisplayEnabled.checked = mod.displayStatus;
 	}
 
 	@Override
@@ -92,17 +92,17 @@ public class ZebrasToggleSneakConfigPanelLl extends Gui implements ConfigPanel {
 			activeButton = sneakFunctionEnabled;
 			sneakFunctionEnabled.func_146113_a(mc.getSoundHandler());
 			sneakFunctionEnabled.checked = !sneakFunctionEnabled.checked;
-			mod.toggleSneak = sneakFunctionEnabled.checked;
+			mod.ZTS.toggleSneak = mod.toggleSneak = sneakFunctionEnabled.checked;
 		} else if (sprintFunctionEnabled.mousePressed(mc, mouseX, mouseY)) {
 			activeButton = sprintFunctionEnabled;
 			sprintFunctionEnabled.func_146113_a(mc.getSoundHandler());
 			sprintFunctionEnabled.checked = !sprintFunctionEnabled.checked;
-			mod.toggleSprint = sprintFunctionEnabled.checked;			
+			mod.ZTS.toggleSprint = mod.toggleSprint = sprintFunctionEnabled.checked;			
 		} else if (statusDisplayEnabled.mousePressed(mc, mouseX, mouseY)) {
 			activeButton = statusDisplayEnabled;
 			statusDisplayEnabled.func_146113_a(mc.getSoundHandler());
 			statusDisplayEnabled.checked = !statusDisplayEnabled.checked;
-			mod.displayStatus = statusDisplayEnabled.checked;			
+			mod.ZTS.displayStatus = mod.displayStatus = statusDisplayEnabled.checked;			
 		}
 	}
 

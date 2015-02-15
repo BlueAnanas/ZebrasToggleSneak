@@ -48,7 +48,7 @@ public class ZebrasToggleSneak extends Gui {
 //		int disCenterX = displayWidth / 2;
 		int disCenterY = displayHeight / 2;
 		
-		String sprint=I18n.format("display.label.sneak"), sneak=I18n.format("display.label.sprint");
+		String sneak=I18n.format("display.label.sneak"), sprint=I18n.format("display.label.sprint");
 		int textWidth = Math.max(mc.fontRenderer.getStringWidth(sprint), mc.fontRenderer.getStringWidth(sneak));
 		
 		drawRect(2, disCenterY - 1 - mc.fontRenderer.FONT_HEIGHT - 2, 4 + textWidth + 4, disCenterY - 1,
