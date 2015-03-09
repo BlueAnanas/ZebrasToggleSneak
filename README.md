@@ -6,7 +6,7 @@ BlauesZebra's Toggle Sneak Minecraft client Mod - Minecraft player can toggle th
 ### Technical Info
  - Setup Java
  - Setup Gradle
- - Setup Git](#setup-git)
+ - Setup Git
  - Setup ZebrasToggleSneak
  - Compile ZebrasToggleSneak
  - Updating Your Repository
