@@ -1,22 +1,22 @@
 ZebrasToggleSneak
 =================
 
-BlauesZebra's Toggle Sneak Minecraft client Mod - Minecraft player can toggle the state of the sneak and sprint keys if activated. The function can be enabled and disabled ingame by pressing another configurable key. The State at startup can be configured using a GUI. ZebrasToggleSprint requires Forge.
+BlauesZebra's Toggle Sneak Minecraft client Mod - Minecraft player can toggle the state of the sneak and sprint keys if activated. The function can be enabled and disabled ingame by pressing another configurable key. The State at startup can be configured using a GUI. ZebrasToggleSprint requires a mod loader, Forge or LiteLoader. The gradle build script will compile a mod jar for Forge and another for LiteLoader.
 
 ### Technical Info
- - [Setup Java](#setup-java)
- - [Setup Gradle](#setup-gradle)
- - [Setup Git](#setup-git)
- - [Setup ZebrasToggleSneak](#setup-ZebrasToggleSneak)
- - [Compile ZebrasToggleSneak](#compile-ZebrasToggleSneak)
- - [Updating Your Repository](#updating-your-repository)
+ - Setup Java
+ - Setup Gradle
+ - Setup Git](#setup-git)
+ - Setup ZebrasToggleSneak
+ - Compile ZebrasToggleSneak
+ - Updating Your Repository
 
-#### Setup Java
+#### <a name="setupjava"></a>Setup Java
 The Java JDK is used to compile ZebrasToggleSneak.
 
 1. Download and install the Java JDK.
-    * [Windows/Mac download link](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html). Scroll down, accept the `Oracle Binary Code License Agreement for Java SE`, and download it (if you have a 64-bit OS, please download the 64-bit version).
-    * Linux: Installation methods for certain popular flavors of Linux are listed below. If your distribution is not listed, follow the instructions specific to your package manager or install it manually [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html).
+    * [Windows/Mac download link](http://www.oracle.com/technetwork/java/javase/downloads/index.html). Scroll down, accept the `Oracle Binary Code License Agreement for Java SE`, and download it (if you have a 64-bit OS, please download the 64-bit version).
+    * Linux: Installation methods for certain popular flavors of Linux are listed below. If your distribution is not listed, follow the instructions specific to your package manager or install it manually [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
         * Gentoo: `emerge dev-java/oracle-jdk-bin`
         * Archlinux: `pacman -S jdk7-openjdk`
         * Ubuntu/Debian: `apt-get install openjdk-7-jdk`
@@ -32,7 +32,7 @@ The Java JDK is used to compile ZebrasToggleSneak.
         7. Append `;%JAVA_HOME%\bin` EXACTLY AS SHOWN and click `Ok`. Make sure the location is correct; double-check just to make sure.
 3. Open up your command line and run `javac`. If it spews out a bunch of possible options and the usage, then you're good to go. If not try the steps again.
 
-#### Setup Gradle
+#### <a name="setupgradle"></a>Setup Gradle
 Gradle is used to execute the various build tasks when compiling ZebrasToggleSneak.
 
 1. Download and install Gradle.
