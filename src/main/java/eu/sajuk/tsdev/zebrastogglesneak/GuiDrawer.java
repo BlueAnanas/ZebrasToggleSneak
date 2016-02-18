@@ -54,7 +54,7 @@ public class GuiDrawer extends Gui {
 		
 		if ((mcDisplayWidth == mc.displayWidth) && (mcDisplayHeight == mc.displayHeight)) return;
 		
-        ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution scaledresolution = new ScaledResolution(mc);
 		
         int displayWidth = scaledresolution.getScaledWidth();
 		int textWidth = Math.max(mc.fontRendererObj.getStringWidth(sprintTxt), mc.fontRendererObj.getStringWidth(sneakTxt));

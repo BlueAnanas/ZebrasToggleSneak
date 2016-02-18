@@ -12,7 +12,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -55,7 +54,7 @@ public class ZebrasToggleSneak {
         kbList = getKeyBindings();
         for(KeyBinding kb: kbList) ClientRegistry.registerKeyBinding(kb);
 
-		FMLCommonHandler.instance().bus().register(this); // register the onConfigChanged(...)
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent
@@ -87,7 +86,6 @@ public class ZebrasToggleSneak {
 	public void postLoad(FMLPostInitializationEvent event) {
 	
 		if (displayStatus) MinecraftForge.EVENT_BUS.register(guiDrawer);
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent

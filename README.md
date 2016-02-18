@@ -74,6 +74,8 @@ This section assumes that you're using the command-line version of Git.
 #### Compile ZebrasToggleSneak
 1. Execute `gradle setupDecompWorkspace`. This sets up Forge and downloads the necessary libraries to build ZebrasToggleSneak. This might take some time, be patient.
     * You will generally only have to do this once until the Forge version in `build.properties` changes.
+    * Just in case that there are obscure fails execute `gradle cleanCache setupDecompWorkspace --refresh-dependencies`
+    * If you are using eclipse setup your class mappings with `gradle eclipse`
 2. Execute `gradle build`. If you did everything right, `BUILD SUCCESSFUL` will be displayed after it finishes. This should be relatively quick.
     * If you see `BUILD FAILED`, check the error output (it should be right around `BUILD FAILED`), fix everything (if possible), and try again.
 3. Go to `mcdev\ZebrasToggleSneak\build\libs`.You should see 

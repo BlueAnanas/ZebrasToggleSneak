@@ -15,7 +15,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
 //        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.7' https://github.com/matthewprenger/CurseGradle/wiki
     }
 }
