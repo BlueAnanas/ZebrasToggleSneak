@@ -1,57 +1,50 @@
 buildscript {
     repositories {
-    	mavenLocal()  // added to find the pached ForgeGradle jar - don't forget to do install after building it locally
         mavenCentral()
+        jcenter()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+      		url "https://plugins.gradle.org/m2/"
+    	}
+        maven {
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            name = 'sonatype'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
+//        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.7' https://github.com/matthewprenger/CurseGradle/wiki
     }
 }
 
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
+// apply plugin: 'com.matthewprenger.cursegradle'
 
 compileJava.options.encoding = 'UTF-8'
+compileJava.sourceCompatibility = '1.7'
+compileJava.targetCompatibility = '1.7'
 
-// define the properties file
-ext.configFile = file "build.properties"
-
-configFile.withReader {
-    // read config.  it shall from now on be referenced as simply config or as project.config
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
-
-ext.set("revision", getBuildNo())
-
-group = config.group_name
-version = config.mod_version + "." + revision
-archivesBaseName = "${config.mod_id}-${config.minecraft_version}"
+group = project.group_name
+version = project.mod_version + "." + project.mod_revision
+archivesBaseName = "${project.mod_id}-${project.minecraft_version}"
 
 minecraft {
-    version = config.minecraft_version + "-" + config.forge_version // grab latest forge
+    version = project.minecraft_version + "-" + project.forge_version
+	mappings = project.mappings_version
 	if (file('../multiProjectDir').exists()) {
-		assetDir = "../multiProjectDir/assets"
+		runDir = "../multiProjectDir"
 	} else {
-		assetDir = "eclipse/assets"
+		runDir = "eclipse"
 	}
-    replace '@MOD_ID@', config.mod_id
-    replace '@MOD_NAME@', config.mod_name
-    replace '@MOD_VERSION@', config.mod_version
-    replace '@MINECRAFT_VERSION@', config.minecraft_version
+    replace '@MOD_ID@', project.mod_id
+    replace '@MOD_NAME@', project.mod_name
+    replace '@MOD_VERSION@', project.mod_version
+    replace '@MINECRAFT_VERSION@', project.minecraft_version
 }
 
-repositories {
-    mavenLocal()  // install the com.mumfrey:liteloader:1.8-SNAPSHOT-mcpnames jar manually in local repo
-}                 // mvn install:install-file -Dfile={local jar file} -DgroupId=com.mumfrey -DartifactId=liteloader -Dversion=1.8-SNAPSHOT-mcpnames -Dpackaging=jar
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -70,10 +63,10 @@ dependencies {
 
 processResources {
     // force replacements if input changes
-    inputs.property "version", config.mod_version
-    inputs.property "mcversion", config.minecraft_version
-	inputs.property "revision", project.revision
-    inputs.property "forgeversion", config.forge_version
+    inputs.property "version", project.mod_version
+    inputs.property "mcversion", project.minecraft_version
+	inputs.property "revision", project.mod_revision
+    inputs.property "forgeversion", project.forge_version
     
     // replace stuff in the files we want.
     from(sourceSets.main.resources.srcDirs) {
@@ -83,12 +76,12 @@ processResources {
 
         // replaces
         expand ([
-            'mod_version': config.mod_version,
-            'mod_revision': project.revision,
-            'forge_version': config.forge_version,
-            'minecraft_version': config.minecraft_version,
-            'mod_id': config.mod_id,
-            'mod_name': config.mod_name,
+            'mod_version': project.mod_version,
+            'mod_revision': project.mod_revision,
+            'forge_version': project.forge_version,
+            'minecraft_version': project.minecraft_version,
+            'mod_id': project.mod_id,
+            'mod_name': project.mod_name,
         ])
     }
 
@@ -105,37 +98,12 @@ jar {
 	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
 }
 
-// add a source jar
-task sourceJar(type: Jar) {
-    from sourceSets.main.allSource
+sourceJar {
     appendix = 'src'
-}
-
-// because the normal output has been made to be obfuscated
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    appendix = 'deobf'
+	classifier = ''
 }
 
 artifacts {
     archives sourceJar
-    archives deobfJar
-}
-String getBuildNo(){
-	return git("rev-list", "HEAD", "--count")
-}
-import static net.minecraftforge.gradle.dev.DevBasePlugin.*
-String git(String[] args){
-	try{
-		return runGit(project, project.getProjectDir(), args)
-	}catch(Exception e){
-		return null
-	}
 }
 
-apply plugin: 'liteloader'  /// should work
-jarLiteloader{
-    from('src/main/java') { include 'assets/**' }
-//	appendix = 'liteloader'
-	exclude 'eu/sajuk/tsdev/zebrastogglesneak/FMLZebrasToggleSneak.class', 'mcmod.info'
-}

@@ -1,16 +1,33 @@
-# subdirs
-/.settings/
-/.metadata/
-/.gradle/
-/eclipse/
-/bin/
-/release/
-/build/
-/run/
+## gradle
+/.gradle
+/build
+
+## ForgeGradle
+/run
+
+## eclipse
+/.settings
+/.metadata
+/.classpath
+/.project
+/bin
+/eclipse
+
+## intellij
+/out
+/.idea
+/*.iml
+/*.ipr
+/*.iws
+
+## custom
+/release
+/run
 
 # some IDE things
 .project
 .classpath
+*.launch
 
 # all compiled code
 *.class

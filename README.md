@@ -1,21 +1,13 @@
 ZebrasToggleSneak
 =================
 
-BlauesZebra's Toggle Sneak Minecraft client Mod - Minecraft player can toggle the state of the sneak and sprint keys if activated. The function can be enabled and disabled ingame by pressing another configurable key. The State at startup can be configured using a GUI. ZebrasToggleSprint requires a mod loader, Forge or LiteLoader. The gradle build script will compile a mod jar for Forge and another for LiteLoader.
-
-Important change while Liteloader for 1.8 isn't released:
-* have a working maven install on your build machine
-* get the FG_1.2 branch of forge Gradle from https://github.com/BlueAnanas/ForgeGradle - it's patched to support LiteLoader 1.8
-* `build install` this branch with gradle - this puts the pached ForgeGradle 1.2 into the mchines local maven repo.
-* download the newest LiteLoader snapshots with source and javadoc and install them in the local maven repo as well (`mvn install:install-file ...`)
-* now build your mod as usual with the liteloader and forge plugins with gradle. local maven repo is added in the repo path to ensure that the pached liteloader plugin is used.
-
+BlauesZebra's Toggle Sneak Minecraft client Mod - Minecraft player can toggle the state of the sneak and sprint keys if activated. The function can be enabled and disabled ingame by pressing another configurable key. The State at startup can be configured using a GUI. ZebrasToggleSprint requires a Forge.
 
 ### Technical Info
  - [Setup Java](#setup-java)
  - [Setup Gradle](#setup-gradle)
  - [Setup Git](#setup-git)
- - [Setup ZebrasToggleSneak](#setup-Zebrastogglesneak)
+ - [Setup ZebrasToggleSneak](#setup-zebrastogglesneak)
  - [Compile ZebrasToggleSneak](#compile-zebrastogglesneak)
  - [Updating Your Repository](#updating-your-repository)
 
@@ -86,8 +78,8 @@ This section assumes that you're using the command-line version of Git.
     * If you see `BUILD FAILED`, check the error output (it should be right around `BUILD FAILED`), fix everything (if possible), and try again.
 3. Go to `mcdev\ZebrasToggleSneak\build\libs`.You should see 
     * a `.jar` file named `#.#.#zebrastogglesneak-universal-<version>.jar`.
-    * a `.litemod` file named `zebrastogglesneak-#.#.#-<version>.litemod`.
-4. Copy the jar or litemod file into your Minecraft mods/<mcversion> folder, and you are done!
+    * further source and deobf jars.
+4. Copy the universal jar file into your Minecraft mods/<mcversion> folder, and you are done!
 
 #### Updating Your Repository
 In order to get the most up-to-date builds, you'll have to periodically update your local repository.

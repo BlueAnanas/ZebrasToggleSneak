@@ -27,32 +27,32 @@ public class MovementInputModded extends MovementInput {
 		moveStrafe = 0.0F;
 		moveForward = 0.0F;
 
-		if (gameSettings.keyBindForward.getIsKeyPressed()) moveForward++;
-		if (gameSettings.keyBindBack.getIsKeyPressed()) moveForward--;
-		if (gameSettings.keyBindLeft.getIsKeyPressed()) moveStrafe++;
-		if (gameSettings.keyBindRight.getIsKeyPressed()) moveStrafe--;
+		if (gameSettings.keyBindForward.isKeyDown()) moveForward++;
+		if (gameSettings.keyBindBack.isKeyDown()) moveForward--;
+		if (gameSettings.keyBindLeft.isKeyDown()) moveStrafe++;
+		if (gameSettings.keyBindRight.isKeyDown()) moveStrafe--;
 
-		jump = gameSettings.keyBindJump.getIsKeyPressed();
+		jump = gameSettings.keyBindJump.isKeyDown();
 		
 		if (ZTS.toggleSneak) {
-			if (gameSettings.keyBindSneak.getIsKeyPressed() && !sneakWasPressed) sneak = !sneak;
+			if (gameSettings.keyBindSneak.isKeyDown() && !sneakWasPressed) sneak = !sneak;
 		} else {
-			sneak = gameSettings.keyBindSneak.getIsKeyPressed();
+			sneak = gameSettings.keyBindSneak.isKeyDown();
 		}
 		if (sneak) {
 			moveStrafe *= 0.3F;
 			moveForward *= 0.3F;
 		}
-		sneakWasPressed = gameSettings.keyBindSneak.getIsKeyPressed();
+		sneakWasPressed = gameSettings.keyBindSneak.isKeyDown();
 		
 		if (ZTS.toggleSprint) {
 			// sprint conditions same as in net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate()
 			// therefore sprinting is only possible if on ground, not too hungry etc
-			if (gameSettings.keyBindSprint.getIsKeyPressed() && !sprintWasPressed) sprint = !sprint;
+			if (gameSettings.keyBindSprint.isKeyDown() && !sprintWasPressed) sprint = !sprint;
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			if (sprint &&  moveForward == 1.0F && player.onGround && !player.isUsingItem()
 					&& !player.isPotionActive(Potion.blindness)) player.setSprinting(true);
 		} else sprint = false;
-		sprintWasPressed = gameSettings.keyBindSprint.getIsKeyPressed();
+		sprintWasPressed = gameSettings.keyBindSprint.isKeyDown();
 	}
 }
