@@ -11,19 +11,23 @@ public class MovementInputModded extends MovementInput {
 	private final GameSettings gameSettings;
 	public boolean sprint;
 	private ZebrasToggleSneak ZTS;
-	private boolean sneakWasPressed;
-	private boolean sprintWasPressed;
+	private Minecraft mc;
+	private int sneakWasPressed;
+	private int sprintWasPressed;
+	private EntityPlayerSP player;
 
 	public MovementInputModded(GameSettings gameSettings, ZebrasToggleSneak ZTS) {
 		this.gameSettings = gameSettings;
 		this.sprint = false;
 		this.ZTS = ZTS;
-		this.sneakWasPressed = false;
-		this.sprintWasPressed = false;
+		this.mc = Minecraft.getMinecraft(); // we'll need replace the static ref by a link passed as parameter
+		this.sneakWasPressed = 0;
+		this.sprintWasPressed = 0;
 	}
 
 	public void updatePlayerMoveState() {
 		
+		player = mc.thePlayer;
 		moveStrafe = 0.0F;
 		moveForward = 0.0F;
 
@@ -35,26 +39,67 @@ public class MovementInputModded extends MovementInput {
 		jump = gameSettings.keyBindJump.isKeyDown();
 		
 		if (ZTS.toggleSneak) {
-			if (gameSettings.keyBindSneak.isKeyDown() && !sneakWasPressed) sneak = !sneak;
+			if (gameSettings.keyBindSneak.isKeyDown()) {
+				if (sneakWasPressed == 0) {
+					if (sneak) {
+						sneakWasPressed = -1;
+					} else if (player.isRiding() || player.capabilities.isFlying) {
+						sneakWasPressed = ZTS.keyHoldTicks + 1;
+					} else {
+						sneakWasPressed = 1;
+					}
+					sneak = !sneak;
+				} else if (sneakWasPressed > 0){
+					sneakWasPressed++;
+				}
+			} else {
+				if ((ZTS.keyHoldTicks > 0) && (sneakWasPressed > ZTS.keyHoldTicks)) sneak = false;
+				sneakWasPressed = 0;
+			}
 		} else {
 			sneak = gameSettings.keyBindSneak.isKeyDown();
 		}
+		
 		if (sneak) {
 			moveStrafe *= 0.3F;
 			moveForward *= 0.3F;
 		}
-		sneakWasPressed = gameSettings.keyBindSneak.isKeyDown();
 		
 		if (ZTS.toggleSprint) {
-			// sprint conditions same as in net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate()
-			// therefore sprinting is only possible if on ground, not too hungry etc
-			if (gameSettings.keyBindSprint.isKeyDown() && !sprintWasPressed) sprint = !sprint;
-			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-			if (sprint && !player.isSprinting() && !sneak  && moveForward >= 0.8F
-					&& (player.getFoodStats().getFoodLevel() > 6 || player.capabilities.allowFlying) 
-					&& !player.isHandActive() && !player.isPotionActive(MobEffects.blindness))
-				player.setSprinting(true);
+			if (gameSettings.keyBindSprint.isKeyDown()) {
+				if (sprintWasPressed == 0) {
+					if (sprint) {
+						sprintWasPressed = -1;
+					} else if (player.capabilities.isFlying) {
+						sprintWasPressed = ZTS.keyHoldTicks + 1;
+					} else {
+						sprintWasPressed = 1;
+					}
+					sprint = !sprint;
+				} else if (sprintWasPressed > 0){
+					sprintWasPressed++;
+				}
+			} else {
+				if ((ZTS.keyHoldTicks > 0) && (sprintWasPressed > ZTS.keyHoldTicks)) sprint = false;
+				sprintWasPressed = 0;
+			}
 		} else sprint = false;
-		sprintWasPressed = gameSettings.keyBindSprint.isKeyDown();
+		
+		// sprint conditions same as in net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate()
+		// check for hungry or flying. But nvm, if conditions not met, sprint will 
+		// be canceled there afterwards anyways 
+		if (sprint && moveForward == 1.0F && player.onGround && !player.isHandActive()
+				&& !player.isPotionActive(MobEffects.blindness)) player.setSprinting(true);
+		
+		if (ZTS.flyBoost && player.capabilities.isCreativeMode && player.capabilities.isFlying 
+				&& (mc.getRenderViewEntity() == player) && sprint) {
+			
+			player.capabilities.setFlySpeed(0.05F * ZTS.flyBoostFactor);
+			
+			if (sneak) player.motionY -= 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
+			if (jump) player.motionY += 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
+				
+		} else if (player.capabilities.getFlySpeed() != 0.05F) this.player.capabilities.setFlySpeed(0.05F);
+
 	}
 }
