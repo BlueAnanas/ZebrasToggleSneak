@@ -27,6 +27,9 @@ public class ZebrasToggleSneak {
 	public static Configuration config;
 	public boolean toggleSneak = true;
 	public boolean toggleSprint = false;
+	public boolean flyBoost = false;
+	public float flyBoostFactor = 4.0F;
+	public int keyHoldTicks = 7;
 	public boolean displayStatus = true;
 	private final String displayHPosOpts[] = {"left", "center", "right"};
 	public String displayHPos = displayHPosOpts[0];
@@ -67,7 +70,10 @@ public class ZebrasToggleSneak {
 
 		toggleSneak = config.getBoolean("toggleSneakEnabled", Configuration.CATEGORY_GENERAL, toggleSneak, "Will the sneak toggle function be enabled on startup?", "zebrastogglesneak.config.panel.sneak");
 		toggleSprint = config.getBoolean("toggleSprintEnabled", Configuration.CATEGORY_GENERAL, toggleSprint, "Will the sprint toggle function be enabled on startup?", "zebrastogglesneak.config.panel.sprint");
-		displayStatus = config.getBoolean("displayEnabled", Configuration.CATEGORY_GENERAL, displayStatus, "Will current status of the toggle function be displayed?", "zebrastogglesneak.config.panel.display");
+		flyBoost = config.getBoolean("flyBoostEnabled", Configuration.CATEGORY_GENERAL, flyBoost, "Fly boost activated by sprint key in creative mode", "zebrastogglesneak.config.panel.flyboost");
+		flyBoostFactor = config.getFloat("flyBoostFactor", Configuration.CATEGORY_GENERAL, flyBoostFactor, 1.0F, 8.0F, "Speed multiplier for fly boost", "zebrastogglesneak.config.panel.flyboostfactor");
+		keyHoldTicks = config.getInt("keyHoldTicks", Configuration.CATEGORY_GENERAL, keyHoldTicks, 0, 200, "Minimum key hold time in ticks to prevent toggle", "zebrastogglesneak.config.panel.keyholdticks");
+		displayStatus = config.getBoolean("displayEnabled", Configuration.CATEGORY_GENERAL, displayStatus, "Status of the toggle function displayed", "zebrastogglesneak.config.panel.display");
 		displayHPos = config.getString("displayHPosition", Configuration.CATEGORY_GENERAL, displayHPos, "Horizontal position of onscreen display", displayHPosOpts, "zebrastogglesneak.config.panel.hpos");
 		displayVPos = config.getString("displayVPosition", Configuration.CATEGORY_GENERAL, displayVPos, "Vertical position of onscreen display", displayVPosOpts, "zebrastogglesneak.config.panel.vpos");
 		guiDrawer.setDrawPosition(displayHPos, displayVPos, displayHPosOpts, displayVPosOpts);
