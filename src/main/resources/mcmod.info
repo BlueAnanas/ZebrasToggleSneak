@@ -3,7 +3,7 @@
   "modList": [{
     "modid": "zebrastogglesneak",
     "name": "Zebra's Toggle Sneak&Sprint",
-    "description": "Sneak and sprint keys behave as if they can be locked into the pressed state and unlocked by pressing them again. The function can be enabled/disabled ingame by pressing other configurable keys. Have a look into the Controls section.",
+    "description": "Sneak and sprint keys behave as if they can be locked into the pressed state and unlocked by pressing them again.\\nThe toggle function can be enabled/disabled ingame by pressing other configurable keys. Have a look into the Controls section.\\nSome extras:\\n + No toggle if key is pressed longer than key hold time\\n + Setting key hold time to 0 ticks will disable hold function\\n + No sneak toggle if dismounting or flying\\n + Flying speed can be boosted in creative mode by hitting the sprint key.\\n \\nA tip from BlauesZebra: Have a look at Shotbow's Minecraft servers at us.shotbow.net and eu.shotbow.net.\\nYou'll find this mod useful in all the great game modes there like Annihilation, MTA or MineZ.\\nSee you at Shotbow soon!",
     "version": "${mod_version}",
     "mcversion": "${minecraft_version}",
     "url": "https://github.com/BlueAnanas/ZebrasToggleSneak",
