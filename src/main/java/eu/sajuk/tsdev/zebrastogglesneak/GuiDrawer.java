@@ -39,7 +39,7 @@ public class GuiDrawer extends Gui {
 	@SubscribeEvent
 	public void afterDraw (RenderGameOverlayEvent.Post event) {
 
-		if (ZTS.displayStatus && event.type == ElementType.ALL) {
+		if (ZTS.displayStatus && event.getType() == ElementType.ALL) {
 			computeDrawPosIfChanged();
 			drawRect(rectX1, rectSnY1, rectX2, rectSnY2, ZTS.toggleSneak?colorPack(0,0,196,196):colorPack(196,196,196,64));	    	
 			drawString(mc.fontRendererObj, sneakTxt, rectX1 + 2, rectSnY1 + 2,

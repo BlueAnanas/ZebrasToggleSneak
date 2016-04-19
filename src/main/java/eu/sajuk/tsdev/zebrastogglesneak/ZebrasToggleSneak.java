@@ -63,7 +63,7 @@ public class ZebrasToggleSneak {
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
 
-		if (eventArgs.modID.equals("@MOD_ID@")) syncConfig();
+		if (eventArgs.getModID().equals("@MOD_ID@")) syncConfig();
 	}
 
 	public void syncConfig() {
