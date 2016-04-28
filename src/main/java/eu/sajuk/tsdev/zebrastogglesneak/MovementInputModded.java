@@ -104,8 +104,9 @@ public class MovementInputModded extends MovementInput {
 			if (sneak) player.motionY -= 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
 			if (jump) player.motionY += 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
 				
-		} else if (player.capabilities.getFlySpeed() == boostedFlySpeed) {
-			this.player.capabilities.setFlySpeed(originalFlySpeed);
+		} else {
+			if (player.capabilities.getFlySpeed() == boostedFlySpeed)
+				this.player.capabilities.setFlySpeed(originalFlySpeed);
 			originalFlySpeed = -1.0F;
 		}
 
