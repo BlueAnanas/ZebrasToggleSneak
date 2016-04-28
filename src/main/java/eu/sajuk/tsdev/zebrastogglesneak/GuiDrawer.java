@@ -48,6 +48,13 @@ public class GuiDrawer extends Gui {
 			drawString(mc.fontRendererObj, sprintTxt, rectX1 + 2, rectSpY1 + 2,
 					MIM.sprint?colorPack(255,255,0,96):colorPack(64,64,64,128));
 		}
+
+		ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		drawString(mc.fontRendererObj, MIM.debugFlySpeed(),
+				scaledresolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(MIM.debugFlySpeed()) / 2,
+				scaledresolution.getScaledHeight() - 6 * mc.fontRendererObj.FONT_HEIGHT,
+				colorPack(255,255,0,96));
+		
 	}
 
 	public void computeDrawPosIfChanged() {

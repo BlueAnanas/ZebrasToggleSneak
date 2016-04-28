@@ -26,6 +26,14 @@ public class MovementInputModded extends MovementInput {
 		this.sneakWasPressed = 0;
 		this.sprintWasPressed = 0;
 	}
+	
+	public String debugFlySpeed() {
+		String display;
+		player = mc.thePlayer;
+		display = String.format("flySp.%7.3f", this.player.capabilities.getFlySpeed());
+		if (originalFlySpeed > 0.0F) display += String.format(" from%7.3f", originalFlySpeed);
+		return display;
+	}
 
 	public void updatePlayerMoveState() {
 		
@@ -96,7 +104,7 @@ public class MovementInputModded extends MovementInput {
 		if (ZTS.flyBoost && player.capabilities.isCreativeMode && player.capabilities.isFlying 
 				&& (mc.getRenderViewEntity() == player) && sprint) {
 			
-			if (originalFlySpeed < 0.0F || this.player.capabilities.getFlySpeed() != originalFlySpeed)
+			if (originalFlySpeed < 0.0F || this.player.capabilities.getFlySpeed() != boostedFlySpeed)
 				originalFlySpeed = this.player.capabilities.getFlySpeed();
 			boostedFlySpeed = originalFlySpeed * ZTS.flyBoostFactor;
 			player.capabilities.setFlySpeed(boostedFlySpeed);
