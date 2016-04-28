@@ -15,6 +15,8 @@ public class MovementInputModded extends MovementInput {
 	private int sneakWasPressed;
 	private int sprintWasPressed;
 	private EntityPlayerSP player;
+	private float originalFlySpeed = -1.0F;
+	private float boostedFlySpeed;
 
 	public MovementInputModded(GameSettings gameSettings, ZebrasToggleSneak ZTS) {
 		this.sprint = false;
@@ -94,12 +96,18 @@ public class MovementInputModded extends MovementInput {
 		if (ZTS.flyBoost && player.capabilities.isCreativeMode && player.capabilities.isFlying 
 				&& (mc.getRenderViewEntity() == player) && sprint) {
 			
-			player.capabilities.setFlySpeed(0.05F * ZTS.flyBoostFactor);
+			if (originalFlySpeed < 0.0F || this.player.capabilities.getFlySpeed() != originalFlySpeed)
+				originalFlySpeed = this.player.capabilities.getFlySpeed();
+			boostedFlySpeed = originalFlySpeed * ZTS.flyBoostFactor;
+			player.capabilities.setFlySpeed(boostedFlySpeed);
 			
 			if (sneak) player.motionY -= 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
 			if (jump) player.motionY += 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
 				
-		} else if (player.capabilities.getFlySpeed() != 0.05F) this.player.capabilities.setFlySpeed(0.05F);
+		} else if (player.capabilities.getFlySpeed() == boostedFlySpeed) {
+			this.player.capabilities.setFlySpeed(originalFlySpeed);
+			originalFlySpeed = -1.0F;
+		}
 
 	}
 }
