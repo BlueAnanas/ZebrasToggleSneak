@@ -34,6 +34,12 @@ public class MovementInputModded extends MovementInput {
 		if (originalFlySpeed > 0.0F) display += String.format(" from%7.3f", originalFlySpeed);
 		return display;
 	}
+	public String debugMovement() {
+		String display;
+		display = String.format("X=%8.3f Y=%8.3f Z=%8.3f", this.player.motionX, this.player.motionY, this.player.motionZ);
+		if (originalFlySpeed > 0.0F) display += String.format(" from%7.3f", originalFlySpeed);
+		return display;
+	}
 
 	public void updatePlayerMoveState() {
 		

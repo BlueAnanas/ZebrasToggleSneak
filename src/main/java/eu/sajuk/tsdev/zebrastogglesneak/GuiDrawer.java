@@ -52,7 +52,11 @@ public class GuiDrawer extends Gui {
 		ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		drawString(mc.fontRendererObj, MIM.debugFlySpeed(),
 				scaledresolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(MIM.debugFlySpeed()) / 2,
-				scaledresolution.getScaledHeight() - 6 * mc.fontRendererObj.FONT_HEIGHT,
+				scaledresolution.getScaledHeight() - 6 * mc.fontRendererObj.FONT_HEIGHT - 2,
+				colorPack(255,255,0,96));
+		drawString(mc.fontRendererObj, MIM.debugMovement(),
+				scaledresolution.getScaledWidth() / 2 - mc.fontRendererObj.getStringWidth(MIM.debugMovement()) / 2,
+				scaledresolution.getScaledHeight() - 7 * mc.fontRendererObj.FONT_HEIGHT - 4,
 				colorPack(255,255,0,96));
 		
 	}
