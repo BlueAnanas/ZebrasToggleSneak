@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.MovementInputFromOptions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -16,13 +17,17 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLModDisabledEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-@Mod(modid="@MOD_ID@", name="@MOD_NAME@", version="@MOD_VERSION@", guiFactory = "eu.sajuk.tsdev.zebrastogglesneak.ZebasToggleSneakGuiFactory")
+@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@MOD_VERSION@", clientSideOnly = true,
+     acceptedMinecraftVersions = "[@MINECRAFT_VERSION@]", canBeDeactivated = true,
+     updateJSON = "http://tsdev.3zebras.eu/minecraft/zebrastogglesneak_promotions.json?mod=@MOD_VERSION@&mcv=@MINECRAFT_VERSION@",
+     guiFactory = "eu.sajuk.tsdev.zebrastogglesneak.ZebasToggleSneakGuiFactory")
 public class ZebrasToggleSneak {
 
 	public static Configuration config;
@@ -59,6 +64,14 @@ public class ZebrasToggleSneak {
         for(KeyBinding kb: kbList) ClientRegistry.registerKeyBinding(kb);
 
 		FMLCommonHandler.instance().bus().register(this); // register the onConfigChanged(...)
+	}
+
+	@EventHandler
+	public void deactivate(FMLModDisabledEvent event) {
+		// this class instance is already unregistered from the event bus
+		if (displayStatus) MinecraftForge.EVENT_BUS.unregister(guiDrawer);		
+		if (mc.thePlayer != null)
+			mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
 	}
 
 	@SubscribeEvent
