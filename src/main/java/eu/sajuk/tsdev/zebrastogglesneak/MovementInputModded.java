@@ -91,7 +91,7 @@ public class MovementInputModded extends MovementInput {
 		// check for hungry or flying. But nvm, if conditions not met, sprint will 
 		// be canceled there afterwards anyways 
 		if (sprint && moveForward == 1.0F && player.onGround && !player.isHandActive()
-				&& !player.isPotionActive(MobEffects.blindness)) player.setSprinting(true);
+				&& !player.isPotionActive(MobEffects.BLINDNESS)) player.setSprinting(true);
 		
 		if (ZTS.flyBoost && player.capabilities.isCreativeMode && player.capabilities.isFlying 
 				&& (mc.getRenderViewEntity() == player) && sprint) {

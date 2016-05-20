@@ -5,7 +5,6 @@ BlauesZebra's Toggle Sneak Minecraft client Mod - Minecraft player can toggle th
 
 ### Technical Info
  - [Setup Java](#setup-java)
- - [Setup Gradle](#setup-gradle)
  - [Setup Git](#setup-git)
  - [Setup ZebrasToggleSneak](#setup-zebrastogglesneak)
  - [Compile ZebrasToggleSneak](#compile-zebrastogglesneak)
@@ -32,24 +31,6 @@ The Java JDK is used to compile ZebrasToggleSneak.
         7. Append `;%JAVA_HOME%\bin` EXACTLY AS SHOWN and click `Ok`. Make sure the location is correct; double-check just to make sure.
 3. Open up your command line and run `javac`. If it spews out a bunch of possible options and the usage, then you're good to go. If not try the steps again.
 
-#### Setup Gradle
-Gradle is used to execute the various build tasks when compiling ZebrasToggleSneak.
-
-1. Download and install Gradle.
-    * [Windows/Mac download link](http://www.gradle.org/downloads). You only need the binaries, but choose whatever flavor you want.
-        * Unzip the package and put it wherever you want, eg `C:\Gradle`.
-    * Linux: Installation methods for certain popular flavors of Linux are listed below. If your distribution is not listed, follow the instructions specific to your package manager or install it manually [here](http://www.gradle.org/downloads).
-        * Gentoo: `emerge dev-java/gradle-bin`
-        * Archlinux: You'll have to install it from the [AUR](https://aur.archlinux.org/packages/gradle).
-        * Ubuntu/Debian: `apt-get install gradle`
-        * Fedora: Install Gradle manually from its website (see above), as Fedora ships a "broken" version of Gradle. Use `yum install gradle` only if you know what you're doing.
-2. Set up the environment.
-    * Windows: Set environment variables for Gradle.
-        1. Go back to `Environment Variables` and then create a new system variable.
-        2. For `Variable Name`, input `GRADLE_HOME`.
-        3. For `Variable Value`, input something similar to `C:\Gradle-1.10` exactly as shown (or wherever your Gradle installation is), and click `Ok`.
-        4. Scroll down to `Path` again, and append `;%GRADLE_HOME%\bin` EXACTLY AS SHOWN and click `Ok`. Once again, double-check the location.
-3. Open up your command line and run `gradle`. If it says "Welcome to Gradle [version].", then you're good to go. If not try the steps again.
 
 #### Setup Git
 Git is used to clone ZebrasToggleSneak and update your local copy.
@@ -72,16 +53,17 @@ This section assumes that you're using the command-line version of Git.
 ***
 
 #### Compile ZebrasToggleSneak
-1. Execute `gradle setupDecompWorkspace`. This sets up Forge and downloads the necessary libraries to build ZebrasToggleSneak. This might take some time, be patient.
+1. Execute `gradlew setupDecompWorkspace`. This sets up Forge and downloads the necessary libraries to build ZebrasToggleSneak. This might take some time, be patient.
     * You will generally only have to do this once until the Forge version in `build.properties` changes.
-    * Just in case that there are obscure fails execute `gradle cleanCache setupDecompWorkspace --refresh-dependencies`
-    * If you are using eclipse setup your class mappings with `gradle eclipse`
-2. Execute `gradle build`. If you did everything right, `BUILD SUCCESSFUL` will be displayed after it finishes. This should be relatively quick.
+    * Just in case that there are obscure fails execute `gradlew cleanCache setupDecompWorkspace --refresh-dependencies`
+    * If you are using eclipse setup your class mappings with `gradlew eclipse`
+2. Execute `gradlew build`. If you did everything right, `BUILD SUCCESSFUL` will be displayed after it finishes. This should be relatively quick.
     * If you see `BUILD FAILED`, check the error output (it should be right around `BUILD FAILED`), fix everything (if possible), and try again.
 3. Go to `mcdev\ZebrasToggleSneak\build\libs`.You should see 
-    * a `.jar` file named `#.#.#zebrastogglesneak-universal-<version>.jar`.
-    * further source and deobf jars.
-4. Copy the universal jar file into your Minecraft mods/<mcversion> folder, and you are done!
+    * a `.jar` file named `zebrastogglesneak-<mc-version>-<mod-version>.jar`.
+    * a source jar.
+4. Copy the first jar file into your Minecraft mods/<mc-version> folder, and you are done!
+If you're not on Windows, you'll probably need to use `./gradlew` instead of `gradlew`
 
 #### Updating Your Repository
 In order to get the most up-to-date builds, you'll have to periodically update your local repository.
@@ -113,7 +95,7 @@ Crashing? Have a suggestion? Found a bug? Create an issue now!
 4. Enter your issue title (something that summarizes your issue), and then add a detailed description ("Hey, could you add/change xxx?" or "Hey, found an exploit: stuff").
     * If you are reporting a bug, make sure you include the following:
         * Version (can be found in the mcmod.info file or in the mod list)
-        * ForgeModLoader log (please use [gists](https://gist.github.com/) for large amounts of text!)
+        * Logfiles `fml-client-latest.log` and `latest.log` found in the `.minecraft/logs` directory (please use [gists](https://gist.github.com/) for large amounts of text!)
         * Detailed description of the bug
 5. Click `Submit new issue`, and wait for feedback!
 
