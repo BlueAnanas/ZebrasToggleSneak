@@ -16,12 +16,10 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
-//        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.7' https://github.com/matthewprenger/CurseGradle/wiki
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-// apply plugin: 'com.matthewprenger.cursegradle'
 
 compileJava.options.encoding = 'UTF-8'
 compileJava.sourceCompatibility = '1.7'
@@ -41,7 +39,7 @@ minecraft {
 	}
     replace '@MOD_ID@', project.mod_id
     replace '@MOD_NAME@', project.mod_name
-    replace '@MOD_VERSION@', project.mod_version
+    replace '@MOD_VERSION@', project.version
     replace '@MINECRAFT_VERSION@', project.minecraft_version
 }
 
@@ -76,7 +74,8 @@ processResources {
 
         // replaces
         expand ([
-            'mod_version': project.mod_version,
+            'mod_version': project.version,
+            'mod_featureversion': project.mod_version,
             'mod_revision': project.mod_revision,
             'forge_version': project.forge_version,
             'minecraft_version': project.minecraft_version,
@@ -95,7 +94,6 @@ processResources {
 
 jar {
     from('src/main/java') { include 'assets/**' }
-	exclude 'eu/sajuk/tsdev/zebrastogglesneak/LiteModZebrasToggleSneak.class', 'litemod.json'
 }
 
 sourceJar {
