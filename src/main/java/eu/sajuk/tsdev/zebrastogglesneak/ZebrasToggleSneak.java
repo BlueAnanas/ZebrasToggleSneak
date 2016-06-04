@@ -31,12 +31,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class ZebrasToggleSneak {
 
 	public static Configuration config;
+	private final int configVersionMod = 1;
+	private int configVersionFile = 0;
 	public boolean toggleSneak = true;
 	public boolean toggleSprint = false;
 	public boolean flyBoost = false;
 	public float flyBoostFactor = 4.0F;
 	public int keyHoldTicks = 7;
-	public boolean displayStatus = true;
+	private final String statusDisplayOpts[] = {"no display", "color coded", "text only"};
+	public String statusDisplay = statusDisplayOpts[1];
 	private final String displayHPosOpts[] = {"left", "center", "right"};
 	public String displayHPos = displayHPosOpts[0];
 	private final String displayVPosOpts[] = {"top", "middle", "bottom"};
@@ -51,10 +54,11 @@ public class ZebrasToggleSneak {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 
-		config = new Configuration(event.getSuggestedConfigurationFile());
-		config.load();
+		config = new Configuration(event.getSuggestedConfigurationFile(), Integer.toString(configVersionMod));
 		config.setCategoryComment(Configuration.CATEGORY_GENERAL, "ATTENTION: Editing this file manually is no longer necessary. \n" +
 				"Use the Mods button on Minecraft's home screen to modify these settings.");
+		try { configVersionFile = Integer.parseInt(config.getLoadedConfigVersion()); } catch (NumberFormatException e) { };
+		while (configVersionFile < configVersionMod) upgradeConfigFrom(configVersionFile++);
 		syncConfig();
 	}
 
@@ -68,8 +72,8 @@ public class ZebrasToggleSneak {
 
 	@EventHandler
 	public void deactivate(FMLModDisabledEvent event) {
-		// this class instance is already unregistered from the event bus
-		if (displayStatus) MinecraftForge.EVENT_BUS.unregister(guiDrawer);		
+		// this class instance is already unregistered from the event bus by Forge itself
+		if (displayStatus() > 0) MinecraftForge.EVENT_BUS.unregister(guiDrawer);		
 		if (mc.thePlayer != null)
 			mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
 	}
@@ -87,11 +91,24 @@ public class ZebrasToggleSneak {
 		flyBoost = config.getBoolean("flyBoostEnabled", Configuration.CATEGORY_GENERAL, flyBoost, "Fly boost activated by sprint key in creative mode", "zebrastogglesneak.config.panel.flyboost");
 		flyBoostFactor = config.getFloat("flyBoostFactor", Configuration.CATEGORY_GENERAL, flyBoostFactor, 1.0F, 8.0F, "Speed multiplier for fly boost", "zebrastogglesneak.config.panel.flyboostfactor");
 		keyHoldTicks = config.getInt("keyHoldTicks", Configuration.CATEGORY_GENERAL, keyHoldTicks, 0, 200, "Minimum key hold time in ticks to prevent toggle", "zebrastogglesneak.config.panel.keyholdticks");
-		displayStatus = config.getBoolean("displayEnabled", Configuration.CATEGORY_GENERAL, displayStatus, "Status of the toggle function displayed", "zebrastogglesneak.config.panel.display");
+		statusDisplay = config.getString("statusDisplay", Configuration.CATEGORY_GENERAL, statusDisplay, "Status display style", statusDisplayOpts, "zebrastogglesneak.config.panel.display");
 		displayHPos = config.getString("displayHPosition", Configuration.CATEGORY_GENERAL, displayHPos, "Horizontal position of onscreen display", displayHPosOpts, "zebrastogglesneak.config.panel.hpos");
 		displayVPos = config.getString("displayVPosition", Configuration.CATEGORY_GENERAL, displayVPos, "Vertical position of onscreen display", displayVPosOpts, "zebrastogglesneak.config.panel.vpos");
 		guiDrawer.setDrawPosition(displayHPos, displayVPos, displayHPosOpts, displayVPosOpts);
 		config.save();
+	}
+	
+	private void upgradeConfigFrom(int version) {
+		switch (version) {
+		case 0:   // upgrade to version 1: convert displayStatus to string option
+			if (config.hasKey(Configuration.CATEGORY_GENERAL,"displayEnabled")) {
+				if (!config.hasKey(Configuration.CATEGORY_GENERAL,"statusDisplay")) 
+					statusDisplay = config.getBoolean("displayEnabled", Configuration.CATEGORY_GENERAL, true, "dummy")
+						? statusDisplayOpts[1] : statusDisplayOpts[0];
+				config.getCategory(Configuration.CATEGORY_GENERAL).remove("displayEnabled");
+			}
+			break;
+		}
 	}
 
 	public List<KeyBinding> getKeyBindings() {
@@ -105,7 +122,7 @@ public class ZebrasToggleSneak {
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event) {
 	
-		if (displayStatus) MinecraftForge.EVENT_BUS.register(guiDrawer);
+		if (displayStatus() > 0) MinecraftForge.EVENT_BUS.register(guiDrawer);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -136,6 +153,12 @@ public class ZebrasToggleSneak {
 		
 		if (kb == sneakBinding) toggleSneak = !toggleSneak;
 		if (kb == sprintBinding) toggleSprint = !toggleSprint;
+	}
+	
+	public int displayStatus() {
+		for (int i=0; i < statusDisplayOpts.length; i++) 
+			if (statusDisplayOpts[i].equals(statusDisplay)) return i;
+		return 0;
 	}
 
 }
