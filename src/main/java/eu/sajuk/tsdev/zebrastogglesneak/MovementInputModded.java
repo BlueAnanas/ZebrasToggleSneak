@@ -1,5 +1,7 @@
 package eu.sajuk.tsdev.zebrastogglesneak;
 
+import java.text.DecimalFormat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
@@ -110,5 +112,41 @@ public class MovementInputModded extends MovementInput {
 			originalFlySpeed = -1.0F;
 		}
 
+	}
+	
+	public String displayText() {
+		
+		// This is a slightly refactored version of Deez's UpdateStatus( ... ) function
+		// found here https://github.com/DouweKoopmans/ToggleSneak/blob/master/src/main/java/deez/togglesneak/CustomMovementInput.java
+		
+		String displayText = "";
+		boolean isFlying = mc.thePlayer.capabilities.isFlying;
+		boolean isRiding = mc.thePlayer.isRiding();
+		boolean isHoldingSneak = gameSettings.keyBindSneak.isKeyDown();
+		boolean isHoldingSprint = gameSettings.keyBindSprint.isKeyDown();
+		
+		if (isFlying) {
+			if (originalFlySpeed > 0.0F) {
+				displayText += "[Flying (" + (new DecimalFormat("#.0")).format(boostedFlySpeed/originalFlySpeed) + "x Boost)]  ";								
+			} else {
+				displayText += "[Flying]  ";				
+			}
+		}
+		if (isRiding) displayText += "[Riding]  ";
+		
+		if (sneak) {
+
+			if (isFlying) displayText += "[Descending]  ";
+			else if (isRiding) displayText += "[Dismounting]  ";
+			else if (isHoldingSneak) displayText += "[Sneaking (Key Held)]  ";
+			else displayText += "[Sneaking (Toggled)]  ";
+
+		} else if (sprint && !isFlying && !isRiding) {
+
+			if (isHoldingSprint) displayText += "[Sprinting (Key Held)]";
+			else displayText += "[Sprinting (Toggled)]";
+		}
+		
+		return displayText.trim();
 	}
 }
