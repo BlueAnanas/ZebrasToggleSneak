@@ -1,7 +1,9 @@
 { "homepage": "https://shotbow.net/forum/threads/342553/#post-2752639",
-  "promos": { "1.8-latest":   "1.4.4", "1.8-recommended":   "1.4.4",
-              "1.8.8-latest": "1.4.4",
-              "1.8.9-latest": "1.4.4", "1.8.9-recommended": "1.4.4",
-              "1.9-latest":   "1.4.4", "1.9-recommended":   "1.4.4",
-              "1.9.4-latest": "1.4.4",
-              "latest":       "1.4.4", "recommended":       "1.4.4" } }
+  "promos": { "1.8-latest":   "1.4.5", "1.8-recommended":   "1.4.5",
+              "1.8.8-latest": "1.4.5",
+              "1.8.9-latest": "1.4.5", "1.8.9-recommended": "1.4.5",
+              "1.9-latest":   "1.4.5", "1.9-recommended":   "1.4.5",
+              "1.9.4-latest": "1.4.5",
+              "1.10-latest":  "1.4.5",
+              "1.10.2-latest":"1.4.5", "1.10.2-recommended":"1.4.5",
+              "latest":       "1.4.5", "recommended":       "1.4.5" } }
