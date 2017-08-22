@@ -7,6 +7,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInput;
+import net.minecraft.client.gui.GuiScreen;
 
 public class MovementInputModded extends MovementInput {
 
@@ -19,6 +20,7 @@ public class MovementInputModded extends MovementInput {
 	private EntityPlayerSP player;
 	private float originalFlySpeed = -1.0F;
 	private float boostedFlySpeed;
+	private boolean wasInGui = false;
 
 	public MovementInputModded(GameSettings gameSettings, ZebrasToggleSneak ZTS) {
 		this.gameSettings = gameSettings;
@@ -44,21 +46,29 @@ public class MovementInputModded extends MovementInput {
 		
 		if (ZTS.toggleSneak) {
 			if (gameSettings.keyBindSneak.isKeyDown()) {
-				if (sneakWasPressed == 0) {
-					if (sneak) {
-						sneakWasPressed = -1;
-					} else if (player.isRiding() || player.capabilities.isFlying) {
-						sneakWasPressed = ZTS.keyHoldTicks + 1;
-					} else {
-						sneakWasPressed = 1;
+				if (!wasInGui) {
+					if (sneakWasPressed == 0) {
+						if (sneak) {
+							sneakWasPressed = -1;
+						} else if (player.isRiding() || player.capabilities.isFlying) {
+							sneakWasPressed = ZTS.keyHoldTicks + 1;
+						} else {
+							sneakWasPressed = 1;
+						}
+						sneak = !sneak;
+					} else if (sneakWasPressed > 0){
+						sneakWasPressed++;
 					}
-					sneak = !sneak;
-				} else if (sneakWasPressed > 0){
-					sneakWasPressed++;
 				}
 			} else {
 				if ((ZTS.keyHoldTicks > 0) && (sneakWasPressed > ZTS.keyHoldTicks)) sneak = false;
 				sneakWasPressed = 0;
+
+				if (mc.currentScreen instanceof GuiScreen) {
+					wasInGui = true;
+				} else {
+					wasInGui = false;
+				}
 			}
 		} else {
 			sneak = gameSettings.keyBindSneak.isKeyDown();
