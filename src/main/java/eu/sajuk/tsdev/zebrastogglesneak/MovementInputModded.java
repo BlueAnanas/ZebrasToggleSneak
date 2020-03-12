@@ -7,6 +7,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInput;
+import net.minecraft.client.gui.GuiScreen;
 
 public class MovementInputModded extends MovementInput {
 
@@ -19,6 +20,7 @@ public class MovementInputModded extends MovementInput {
 	private EntityPlayerSP player;
 	private float originalFlySpeed = -1.0F;
 	private float boostedFlySpeed;
+	private boolean wasInGui = false;
 
 	public MovementInputModded(GameSettings gameSettings, ZebrasToggleSneak ZTS) {
 		this.gameSettings = gameSettings;
@@ -30,8 +32,8 @@ public class MovementInputModded extends MovementInput {
 	}
 
 	public void updatePlayerMoveState() {
-		
-		player = mc.thePlayer;
+
+		player = mc.player;
 		moveStrafe = 0.0F;
 		moveForward = 0.0F;
 
@@ -41,34 +43,42 @@ public class MovementInputModded extends MovementInput {
 		if (this.rightKeyDown = gameSettings.keyBindRight.isKeyDown()) moveStrafe--;
 
 		jump = gameSettings.keyBindJump.isKeyDown();
-		
+
 		if (ZTS.toggleSneak) {
 			if (gameSettings.keyBindSneak.isKeyDown()) {
-				if (sneakWasPressed == 0) {
-					if (sneak) {
-						sneakWasPressed = -1;
-					} else if (player.isRiding() || player.capabilities.isFlying) {
-						sneakWasPressed = ZTS.keyHoldTicks + 1;
-					} else {
-						sneakWasPressed = 1;
+				if (!wasInGui) {
+					if (sneakWasPressed == 0) {
+						if (sneak) {
+							sneakWasPressed = -1;
+						} else if (player.isRiding() || player.capabilities.isFlying) {
+							sneakWasPressed = ZTS.keyHoldTicks + 1;
+						} else {
+							sneakWasPressed = 1;
+						}
+						sneak = !sneak;
+					} else if (sneakWasPressed > 0){
+						sneakWasPressed++;
 					}
-					sneak = !sneak;
-				} else if (sneakWasPressed > 0){
-					sneakWasPressed++;
 				}
 			} else {
 				if ((ZTS.keyHoldTicks > 0) && (sneakWasPressed > ZTS.keyHoldTicks)) sneak = false;
 				sneakWasPressed = 0;
+
+				if (mc.currentScreen instanceof GuiScreen) {
+					wasInGui = true;
+				} else {
+					wasInGui = false;
+				}
 			}
 		} else {
 			sneak = gameSettings.keyBindSneak.isKeyDown();
 		}
-		
+
 		if (sneak) {
 			moveStrafe *= 0.3F;
 			moveForward *= 0.3F;
 		}
-		
+
 		if (ZTS.toggleSprint) {
 			if (gameSettings.keyBindSprint.isKeyDown()) {
 				if (sprintWasPressed == 0) {
@@ -88,24 +98,24 @@ public class MovementInputModded extends MovementInput {
 				sprintWasPressed = 0;
 			}
 		} else sprint = false;
-		
+
 		// sprint conditions same as in net.minecraft.client.entity.EntityPlayerSP.onLivingUpdate()
-		// check for hungry or flying. But nvm, if conditions not met, sprint will 
-		// be canceled there afterwards anyways 
-		if (sprint && moveForward == 1.0F && player.onGround && !player.isHandActive()
+		// check for hungry or flying. But nvm, if conditions not met, sprint will
+		// be canceled there afterwards anyways
+		if (sprint && moveForward == 1.0F && !player.isHandActive()
 				&& !player.isPotionActive(MobEffects.BLINDNESS)) player.setSprinting(true);
-		
-		if (ZTS.flyBoost && player.capabilities.isCreativeMode && player.capabilities.isFlying 
+
+		if (ZTS.flyBoost && player.capabilities.isCreativeMode && player.capabilities.isFlying
 				&& (mc.getRenderViewEntity() == player) && sprint) {
-			
+
 			if (originalFlySpeed < 0.0F || this.player.capabilities.getFlySpeed() != boostedFlySpeed)
 				originalFlySpeed = this.player.capabilities.getFlySpeed();
 			boostedFlySpeed = originalFlySpeed * ZTS.flyBoostFactor;
 			player.capabilities.setFlySpeed(boostedFlySpeed);
-			
+
 			if (sneak) player.motionY -= 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
 			if (jump) player.motionY += 0.15D * (double)(ZTS.flyBoostFactor - 1.0F);
-				
+
 		} else {
 			if (player.capabilities.getFlySpeed() == boostedFlySpeed)
 				this.player.capabilities.setFlySpeed(originalFlySpeed);
@@ -113,27 +123,27 @@ public class MovementInputModded extends MovementInput {
 		}
 
 	}
-	
+
 	public String displayText() {
-		
+
 		// This is a slightly refactored version of Deez's UpdateStatus( ... ) function
 		// found here https://github.com/DouweKoopmans/ToggleSneak/blob/master/src/main/java/deez/togglesneak/CustomMovementInput.java
-		
+
 		String displayText = "";
-		boolean isFlying = mc.thePlayer.capabilities.isFlying;
-		boolean isRiding = mc.thePlayer.isRiding();
+		boolean isFlying = mc.player.capabilities.isFlying;
+		boolean isRiding = mc.player.isRiding();
 		boolean isHoldingSneak = gameSettings.keyBindSneak.isKeyDown();
 		boolean isHoldingSprint = gameSettings.keyBindSprint.isKeyDown();
-		
+
 		if (isFlying) {
 			if (originalFlySpeed > 0.0F) {
-				displayText += "[Flying (" + (new DecimalFormat("#.0")).format(boostedFlySpeed/originalFlySpeed) + "x Boost)]  ";								
+				displayText += "[Flying (" + (new DecimalFormat("#.0")).format(boostedFlySpeed/originalFlySpeed) + "x Boost)]  ";
 			} else {
-				displayText += "[Flying]  ";				
+				displayText += "[Flying]  ";
 			}
 		}
 		if (isRiding) displayText += "[Riding]  ";
-		
+
 		if (sneak) {
 
 			if (isFlying) displayText += "[Descending]  ";
@@ -146,7 +156,7 @@ public class MovementInputModded extends MovementInput {
 			if (isHoldingSprint) displayText += "[Sprinting (Key Held)]";
 			else displayText += "[Sprinting (Toggled)]";
 		}
-		
+
 		return displayText.trim();
 	}
 }

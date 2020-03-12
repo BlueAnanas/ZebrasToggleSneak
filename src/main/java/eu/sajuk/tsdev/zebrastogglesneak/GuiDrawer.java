@@ -2,8 +2,8 @@ package eu.sajuk.tsdev.zebrastogglesneak;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,8 +30,8 @@ public class GuiDrawer extends Gui {
 		
 		this.hPos = hPos; this.vPos = vPos;
 		this.hPosOptions = hPosOptions; this.vPosOptions = vPosOptions;
-		sprintTxt = I18n.format("zebrastogglesneak.display.label.sprint");
-		sneakTxt = I18n.format("zebrastogglesneak.display.label.sneak");
+		this.sprintTxt = I18n.format("zebrastogglesneak.display.label.sprint");
+		this.sneakTxt = I18n.format("zebrastogglesneak.display.label.sneak");
         mcDisplayWidth = -1;
         mcDisplayHeight = -1;
 	}
@@ -43,15 +43,15 @@ public class GuiDrawer extends Gui {
 		if (ZTS.displayStatus() == 1) {
 			computeDrawPosIfChanged();
 			drawRect(rectX1, rectSnY1, rectX2, rectSnY2, ZTS.toggleSneak?colorPack(0,0,196,196):colorPack(196,196,196,64));	    	
-			drawString(mc.fontRendererObj, sneakTxt, rectX1 + 2, rectSnY1 + 2,
+			drawString(mc.fontRenderer , this.sneakTxt, rectX1 + 2, rectSnY1 + 2,
 					MIM.sneak?colorPack(255,255,0,96):colorPack(64,64,64,128));
 			drawRect(rectX1, rectSpY1, rectX2, rectSpY2, ZTS.toggleSprint?colorPack(0,0,196,196):colorPack(196,196,196,64));	    	
-			drawString(mc.fontRendererObj, sprintTxt, rectX1 + 2, rectSpY1 + 2,
+			drawString(mc.fontRenderer , this.sprintTxt, rectX1 + 2, rectSpY1 + 2,
 					MIM.sprint?colorPack(255,255,0,96):colorPack(64,64,64,128));
 		} else if (ZTS.displayStatus() == 2) {
 			// no optimization here - I don't like the text only display anyway
 	        computeTextPos(onlyTxt = MIM.displayText());
-			drawString(mc.fontRendererObj, onlyTxt, rectX1, rectSnY1, colorPack(255,255,255,192));
+			drawString(mc.fontRenderer , onlyTxt, rectX1, rectSnY1, colorPack(255,255,255,192));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class GuiDrawer extends Gui {
         ScaledResolution scaledresolution = new ScaledResolution(mc);
 		
         int displayWidth = scaledresolution.getScaledWidth();
-		int textWidth = Math.max(mc.fontRendererObj.getStringWidth(sprintTxt), mc.fontRendererObj.getStringWidth(sneakTxt));
+		int textWidth = Math.max(mc.fontRenderer .getStringWidth(this.sprintTxt), mc.fontRenderer .getStringWidth(this.sneakTxt));
         if (hPos.equals(hPosOptions[2])) {
         	rectX2 = displayWidth - 2;
         	rectX1 = rectX2 - 2 - textWidth - 2;
@@ -75,7 +75,7 @@ public class GuiDrawer extends Gui {
         }
 
         int displayHeight = scaledresolution.getScaledHeight();
-		int textHeight = mc.fontRendererObj.FONT_HEIGHT;
+		int textHeight = mc.fontRenderer .FONT_HEIGHT;
         if (vPos.equals(vPosOptions[2])) {
         	rectSpY2 = displayHeight - 2;
         	rectSpY1 = rectSpY2 - 2 - textHeight - 2;
@@ -102,7 +102,7 @@ public class GuiDrawer extends Gui {
         ScaledResolution scaledresolution = new ScaledResolution(mc);
 		
         int displayWidth = scaledresolution.getScaledWidth();
-		int textWidth = mc.fontRendererObj.getStringWidth(displayTxt);
+		int textWidth = mc.fontRenderer .getStringWidth(displayTxt);
         if (hPos.equals(hPosOptions[2])) {
         	rectX1 = displayWidth - textWidth - 2;
         } else if (hPos.equals(hPosOptions[1])) {
@@ -113,7 +113,7 @@ public class GuiDrawer extends Gui {
         }
 
         int displayHeight = scaledresolution.getScaledHeight();
-		int textHeight = mc.fontRendererObj.FONT_HEIGHT;
+		int textHeight = mc.fontRenderer .FONT_HEIGHT;
         if (vPos.equals(vPosOptions[2])) {
         	rectSnY1 = displayHeight - 2;
         } else if (vPos.equals(vPosOptions[1])) {

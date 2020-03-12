@@ -24,9 +24,9 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@MOD_VERSION@", clientSideOnly = true,
-     acceptedMinecraftVersions = "[@MINECRAFT_VERSION@]", canBeDeactivated = true,
-     updateJSON = "http://tsdev.3zebras.eu/minecraft/zebrastogglesneak_promotions.json?mod=@MOD_VERSION@&mcv=@MINECRAFT_VERSION@",
-     guiFactory = "eu.sajuk.tsdev.zebrastogglesneak.ZebasToggleSneakGuiFactory")
+acceptedMinecraftVersions = "[@MINECRAFT_VERSION@]", canBeDeactivated = true,
+updateJSON = "http://tsdev.3zebras.eu/minecraft/zebrastogglesneak_promotions.json?mod=@MOD_VERSION@&mcv=@MINECRAFT_VERSION@",
+guiFactory = "eu.sajuk.tsdev.zebrastogglesneak.ZebasToggleSneakGuiFactory")
 public class ZebrasToggleSneak {
 
 	public static Configuration config;
@@ -73,8 +73,8 @@ public class ZebrasToggleSneak {
 	public void deactivate(FMLModDisabledEvent event) {
 		// this class instance is already unregistered from the event bus by Forge itself
 		if (displayStatus() > 0) MinecraftForge.EVENT_BUS.unregister(guiDrawer);		
-		if (mc.thePlayer != null)
-			mc.thePlayer.movementInput = new MovementInputFromOptions(mc.gameSettings);
+		if (mc.player != null)
+			mc.player.movementInput = new MovementInputFromOptions(mc.gameSettings);
 	}
 
 	@SubscribeEvent
@@ -132,8 +132,8 @@ public class ZebrasToggleSneak {
 
 	public void clientTick() {
 		
-		if ((mc.thePlayer != null) && (!(mc.thePlayer.movementInput instanceof MovementInputModded))) {
-			mc.thePlayer.movementInput = mim;
+		if ((mc.player != null) && (!(mc.player.movementInput instanceof MovementInputModded))) {
+			mc.player.movementInput = mim;
 		}
 	}
 	
